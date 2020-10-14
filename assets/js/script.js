@@ -1,8 +1,10 @@
-var buttonEl = document.querySelector("#save-task");
+var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 
 var createTaskHandler = function() 
 {
+    // prevent the default page behavior of reloading the page on each submission
+    event.preventDefault();
     // create a new list item (a task in this case)
     var listItemEl = document.createElement("li");
     // give the new list item style by assigning a class that CSS will use to style it
@@ -13,4 +15,4 @@ var createTaskHandler = function()
     tasksToDoEl.appendChild(listItemEl);
 }
 
-buttonEl.addEventListener("click", createTaskHandler);
+formEl.addEventListener("submit", createTaskHandler);

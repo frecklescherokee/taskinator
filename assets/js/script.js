@@ -5,13 +5,28 @@ var createTaskHandler = function()
 {
     // prevent the default page behavior of reloading the page on each submission
     event.preventDefault();
-    // create a new list item (a task in this case)
+
+    // get the contents of the input element
+    var taskNameInput = document.querySelector("input[name='task-name']").value;
+
+    // get the contents of the selector (drop down)
+    var taskTypeInput = document.querySelector("select[name='task-type']").value;
+    
+    
+    // create list item
     var listItemEl = document.createElement("li");
-    // give the new list item style by assigning a class that CSS will use to style it
     listItemEl.className = "task-item";
-    // add the text to the new list item
-    listItemEl.textContent = "This is a new task.";
-    // add this new list item "element" to the existing list
+
+    // create div to hold task info and add to list item
+    var taskInfoEl = document.createElement("div");
+    // give it a class name
+    taskInfoEl.className = "task-info";
+    // add HTML content to div
+    taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskNameInput + "</h3><span class='task-type'>" + taskTypeInput + "</span>";
+
+    listItemEl.appendChild(taskInfoEl);
+
+    // add entire list item to list
     tasksToDoEl.appendChild(listItemEl);
 }
 

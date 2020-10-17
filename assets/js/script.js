@@ -1,10 +1,23 @@
+// Element to refer to the task form
+// we will use this to reference the fields within the form
 var formEl = document.querySelector("#task-form");
+
+// Element to hold tasks in the "to do" status
 var tasksToDoEl = document.querySelector("#tasks-to-do");
+// Element to hold tasks in the "in progress" status
+var tasksInProgressEl = document.querySelector("#tasks-in-progress");
+// Element to hold tasks in the "completed" status
+var tasksCompletedEl = document.querySelector("#tasks-completed");
+
 // make a variable that will be each tasks's unique identifier
 var taskIdCounter = 0;
-// add a listener to the <main> element.  
-//This will listen for button clicks and dropdown changes on all children elements
+
+// add an element for the <main> element.  
+// we will later listen to this element for button clicks and dropdown changes 
+// on all children elements
 var pageContentEl = document.querySelector("#page-content");
+
+
 
 var taskFormHandler = function(event) 
 {
@@ -201,8 +214,34 @@ var taskButtonHandler = function(event)
     }
 };
 
+var taskStatusChangeHandler = function(event) 
+{
+    // get the task item's id
+    var taskId = event.target.getAttribute("data-task-id");
+
+    // get the currently selected option's value and convert to lowercase
+    var statusValue = event.target.value.toLowerCase();
+
+    // find the parent task item element based on the id
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+    if (statusValue === "to do") 
+    {
+        tasksToDoEl.appendChild(taskSelected);
+    } 
+    else if (statusValue === "in progress") {
+        tasksInProgressEl.appendChild(taskSelected);
+    } 
+    else if (statusValue === "completed") {
+        tasksCompletedEl.appendChild(taskSelected);
+    }
+};
+
 // use an event listener to listen for clicks then call the taskButtonHandler function
 pageContentEl.addEventListener("click", taskButtonHandler);
 
 // add an event listener for when a new task is submitted
 formEl.addEventListener("submit", taskFormHandler);
+
+// add an event listener to sense changes to the task status dropdown menu
+pageContentEl.addEventListener("change", taskStatusChangeHandler);

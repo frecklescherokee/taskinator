@@ -1,33 +1,47 @@
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 
-var createTaskHandler = function() 
+var taskFormHandler = function(event) 
 {
     // prevent the default page behavior of reloading the page on each submission
     event.preventDefault();
 
-    // get the contents of the input element
+    // get the contents of the input element that the user typed
     var taskNameInput = document.querySelector("input[name='task-name']").value;
 
     // get the contents of the selector (drop down)
     var taskTypeInput = document.querySelector("select[name='task-type']").value;
+
+    // package up data as an object
+    var taskDataObj = 
+    {
+        name: taskNameInput,
+        type: taskTypeInput
+    };
+
+    // send data object containing task name and type to the createTaskEl function
+    createTaskEl(taskDataObj);
     
-    
-    // create list item
+}
+
+var createTaskEl = function(taskDataObj)
+{
+    // create list item of class "task-item" in the virtual HTML (DOM)
     var listItemEl = document.createElement("li");
     listItemEl.className = "task-item";
 
-    // create div to hold task info and add to list item
+    // create DOM div to hold task info 
     var taskInfoEl = document.createElement("div");
     // give it a class name
     taskInfoEl.className = "task-info";
-    // add HTML content to div
-    taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskNameInput + "</h3><span class='task-type'>" + taskTypeInput + "</span>";
+    // add task hame and type that user entered into the DOM div
+    taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
 
+    // add task item div to the list item element
     listItemEl.appendChild(taskInfoEl);
-
-    // add entire list item to list
+    
+    // add list item element to the list to be displayed on the page
     tasksToDoEl.appendChild(listItemEl);
 }
 
-formEl.addEventListener("submit", createTaskHandler);
+formEl.addEventListener("submit", taskFormHandler);

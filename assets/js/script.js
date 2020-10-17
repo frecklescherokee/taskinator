@@ -1,6 +1,10 @@
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
+// make a variable that will be each tasks's unique identifier
 var taskIdCounter = 0;
+// add a listener to the <main> element.  
+//This will listen for button clicks and dropdown changes on all children elements
+var pageContentEl = document.querySelector("#page-content");
 
 var taskFormHandler = function(event) 
 {
@@ -117,3 +121,24 @@ var createTaskActions = function(taskId)
 }
 
 formEl.addEventListener("submit", taskFormHandler);
+
+var deleteTask = function(taskId)
+{
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    taskSelected.remove();
+};
+
+// function to handle button clicks for each task 
+var taskButtonHandler = function(event) 
+{
+    console.log(event.target);
+
+    if (event.target.matches(".delete-btn"))
+    {
+        var taskId = event.target.getAttribute("data-task-id");
+        deleteTask(taskId);
+    }
+};
+
+// use an event listener to listen for clicks then call the taskButtonHandler function
+pageContentEl.addEventListener("click", taskButtonHandler);

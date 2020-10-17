@@ -26,17 +26,46 @@ var taskFormHandler = function(event)
     
     // reset the form so a user can enter the next task without having to delete the last task
     formEl.reset();
-    
-    // package up data as an object
-    var taskDataObj = 
-    {
-        name: taskNameInput,
-        type: taskTypeInput
-    };
 
-    // send data object containing task name and type to the createTaskEl function
-    createTaskEl(taskDataObj);
+    // determine if the form element is new or being edited by the presence of a task ID
+    // if it has a task id already, it's an edit of an existing task, not a new task
+    var isEdit = formEl.hasAttribute("data-task-id");
+    
+    // has data attribute, so get task id and call function to complete edit process
+    if (isEdit) 
+    {
+        var taskId = formEl.getAttribute("data-task-id");
+        completeEditTask(taskNameInput, taskTypeInput, taskId);
+    } 
+
+    // no data attribute, so create object as normal and pass to createTaskEl function
+    else 
+    {
+        var taskDataObj = 
+        {
+            name: taskNameInput,
+            type: taskTypeInput
+        };
+
+        createTaskEl(taskDataObj);
+    }
 }
+
+var completeEditTask = function(taskName, taskType, taskId)
+{
+    // find the matching task list item
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+    // set new values
+    taskSelected.querySelector("h3.task-name").textContent = taskName;
+    taskSelected.querySelector("span.task-type").textContent = taskType;
+
+    alert("Task Updated!");
+
+    formEl.removeAttribute("data-task-id");
+    document.querySelector("#save-task").textContent = "Add Task";
+
+};
 
 var createTaskEl = function(taskDataObj)
 {
@@ -117,10 +146,7 @@ var createTaskActions = function(taskId)
     }
 
     return actionContainerEl;
-
 }
-
-formEl.addEventListener("submit", taskFormHandler);
 
 var deleteTask = function(taskId)
 {
@@ -177,3 +203,6 @@ var taskButtonHandler = function(event)
 
 // use an event listener to listen for clicks then call the taskButtonHandler function
 pageContentEl.addEventListener("click", taskButtonHandler);
+
+// add an event listener for when a new task is submitted
+formEl.addEventListener("submit", taskFormHandler);

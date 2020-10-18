@@ -380,12 +380,75 @@ var dragLeaveHandler = function(event)
     }
 }
 
-// save tasks to the tasks array upon any change
+// save tasks to local storage upon any change
 var saveTasks = function() 
 {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+// load tasks from local storage
+var loadTasks = function ()
+{
+    // get task items from local storage
+    var tasks = localStorage.getItem("tasks");
+    
+    // convert tasks from stringified format back into an array of objects
+    tasks = JSON.parse(tasks);
+    // iterate through tasks array and create task elements on the page from it
+    for ( var i = 0; i < tasks.length; i++)
+    {
+        // to keep track of task IDs, reassign task[i]'s id property to the value of taskIdCounter
+        tasks[i].id = taskIdCounter;
+        
+        //console.log(tasks[i]);
+        // create a <li> element in a variable called ListItemEl of the class "task-item"
+        var listItemEl = document.createElement("li");
+        listItemEl.className = "task-item";
+
+        // use setAttribute() to assign data-task-id = tasks[i].id
+        listItemEl.setAttribute("data-task-id", tasks[i].id);
+        // use setAttribute() to set draggable = true
+        listItemEl.setAttribute("draggable", "true");
+        
+        // create DOM div to hold task info 
+        var taskInfoEl = document.createElement("div");
+        // give it a class name
+        taskInfoEl.className = "task-info";
+        // add task hame and type that user entered into the DOM div
+        taskInfoEl.innerHTML = "<h3 class='task-name'>" + tasks[i].name + "</h3><span class='task-type'>" + tasks[i].type + "</span>";
+        
+        // add task item div to the list item element
+        listItemEl.appendChild(taskInfoEl);
+        
+        // call the create task actions function and assign it to the taskActionsEl variable
+        var taskActionsEl = createTaskActions(tasks[i].id);
+        // add the action buttons and dropdown to the listItemEl, which contains the 
+        // task name and type and now the buttons and dropdown
+        listItemEl.appendChild(taskActionsEl);
+
+        if (tasks[i].status === "to do")
+        {
+            listItemEl.querySelector("select[name='status-change']").selectedIndex = 0;
+            tasksToDoEl.appendChild(listItemEl);
+        }
+
+        else if (tasks[i].status === "in progress")
+        {
+            listItemEl.querySelector("select[name='status-change']").selectedIndex = 1;
+            tasksInProgressEl.appendChild(listItemEl);
+        }
+
+        else if (tasks[i].status === "complete")
+        {
+            listItemEl.querySelector("select[name='status-change']").selectedIndex = 2;
+            tasksCompletedEl.appendChild(listItemEl);
+        }
+
+        taskIdCounter++;
+        console.log(listItemEl);
+    }
+    //console.log(tasks);
+}
 
 ///////////////// EVENT LISTENERS ///////////////////
 
@@ -409,3 +472,5 @@ pageContentEl.addEventListener("drop", dropTaskHandler);
 
 // add an event listener to detect when a dragover is no longer over an element
 pageContentEl.addEventListener("dragleave", dragLeaveHandler);
+
+loadTasks();
